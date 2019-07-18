@@ -13,14 +13,14 @@
         <!-- 表单区域 -->
         <el-form :model="loginForm" class="login_form">
           <el-form-item>
-            <el-input v-model="loginForm.username"></el-input>
+            <el-input v-model="loginForm.username" prefix-icon="iconfont icon-user"></el-input>
           </el-form-item>
-          <el-form-item v-model="loginForm.password">
-            <el-input></el-input>
+          <el-form-item >
+            <el-input v-model="loginForm.password" prefix-icon="iconfont icon-3702mima"></el-input>
           </el-form-item>
           <el-form-item class="btns">
-            <el-button type="primary">登录</el-button>
-            <el-button type="info">重置</el-button>
+            <el-button type="primary" round>登录</el-button>
+            <el-button type="info" round>重置</el-button>
 
           </el-form-item>
         </el-form>
