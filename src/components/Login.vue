@@ -2,7 +2,8 @@
  
     
     <!-- 整个页面区域 -->
-
+  <div class="newbg">
+    
     <div class="login_container">
       <!-- 中间白色的盒子区域 -->
       <div class="login_box">
@@ -12,13 +13,14 @@
         </div>
         <!-- 表单区域 -->
         <el-form ref="loginFormRef" :model="loginForm" class="login_form" :rules="loginFormRules">
+          
           <!-- 用户名 -->
           <el-form-item prop="username">
             <el-input v-model="loginForm.username" prefix-icon="iconfont icon-user"></el-input>
           </el-form-item>
           <!-- 密码 -->
           <el-form-item prop="password">
-            <el-input type="password" v-model="loginForm.password" prefix-icon="iconfont icon-3702mima"></el-input>
+            <el-input @blur="loseBlur" @focus="getBlur" type="password" v-model="loginForm.password" prefix-icon="iconfont icon-3702mima"></el-input>
           </el-form-item>
           <!-- 按钮 -->
           <el-form-item class="btns">
@@ -29,7 +31,7 @@
         </el-form>
       </div>
     </div>
-  
+  </div>
   
 </template>
 <script>
@@ -65,19 +67,40 @@ export default {
         if(res.meta.status !== 200) return console.log("登录失败");
         console.log("登录成功");
       });
+      
+    },
+    loseBlur(){
+        console.log('失去了焦点');
+        
+        
+        
+    },
+    getBlur(){
+        console.log('获得了焦点');
+        
     }
   }
 }
 </script>
 <style lang='less' scoped>
   .login_container{
-    background: rgb(44, 62, 80);
-    height: 100%;
+    background:url('../assets/bg.jpeg');
+    background-size:contain;
+    height: 82%;
+  }
+  .newbg{
+    position: absolute;
+    width: 700px;
+    height: 540px;
+    bottom: pink;
+    left:50%;
+    top:50%;
+    transform: translate(-50%,-50%);
   }
   .login_box{
     width:450px;
     height:300px;
-    background-color:#fff;
+    background-color:rgba(255,255,255,0.5);
     border-radius: 3px;
     position: absolute;
     left:50%;
@@ -94,12 +117,12 @@ export default {
     position: absolute;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: #fff;
+    background-color: rgba(255,255,255,0.5);
     img{
       width: 100%;
       height: 100%;
       border-radius: 50%;
-      background-color: #eee;
+      background-color: rgba(255,255,255,0.5);
     }
   }
   .login_form{
