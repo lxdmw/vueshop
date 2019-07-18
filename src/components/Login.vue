@@ -11,16 +11,19 @@
           <img src="../assets/logo.png" alt="">
         </div>
         <!-- 表单区域 -->
-        <el-form :model="loginForm" class="login_form">
-          <el-form-item>
+        <el-form ref="loginFormRef" :model="loginForm" class="login_form" :rules="loginFormRules">
+          <!-- 用户名 -->
+          <el-form-item prop="username">
             <el-input v-model="loginForm.username" prefix-icon="iconfont icon-user"></el-input>
           </el-form-item>
-          <el-form-item >
-            <el-input v-model="loginForm.password" prefix-icon="iconfont icon-3702mima"></el-input>
+          <!-- 密码 -->
+          <el-form-item prop="password">
+            <el-input type="password" v-model="loginForm.password" prefix-icon="iconfont icon-3702mima"></el-input>
           </el-form-item>
+          <!-- 按钮 -->
           <el-form-item class="btns">
             <el-button type="primary" round>登录</el-button>
-            <el-button type="info" round>重置</el-button>
+            <el-button type="info" round @click="resetLoginForm">重置</el-button>
 
           </el-form-item>
         </el-form>
@@ -33,22 +36,32 @@
 export default {
   data () {
     return {
-
       loginForm:{
         username:'',
         password:''
+      },
+      loginFormRules:{
+        username: [
+              { required: true, message: '你没输用户名哦', trigger: 'blur' },
+              { min: 3, max: 5, message: '你需要输入3-5个字符哦', trigger: 'blur' }
+            ],
+        password: [
+              { required: true, message: '你没输密码哦', trigger: 'blur' },
+              { min: 5, max: 10, message: '你需要输入5-10个字符哦', trigger: 'blur' }
+            ]
       }
-
-    };
+    }
   },
   methods:{
-  
+    resetLoginForm(){
+      this.$refs.loginFormRef.resetFields()
+    }
   }
 }
 </script>
 <style lang='less' scoped>
   .login_container{
-    background: #2b4b6b;
+    background: rgb(44, 62, 80);
     height: 100%;
   }
   .login_box{
