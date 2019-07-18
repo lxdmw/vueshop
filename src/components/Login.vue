@@ -5,6 +5,7 @@
   <div class="newbg">
     
     <div class="login_container">
+      <img :src="images" >
       <!-- 中间白色的盒子区域 -->
       <div class="login_box">
         <!-- 头像区域 -->
@@ -16,11 +17,11 @@
           
           <!-- 用户名 -->
           <el-form-item prop="username">
-            <el-input v-model="loginForm.username" prefix-icon="iconfont icon-user"></el-input>
+            <el-input  v-model="loginForm.username" prefix-icon="iconfont icon-user"></el-input>
           </el-form-item>
           <!-- 密码 -->
           <el-form-item prop="password">
-            <el-input @blur="loseBlur" @focus="getBlur" type="password" v-model="loginForm.password" prefix-icon="iconfont icon-3702mima"></el-input>
+            <el-input @blur="loseBlur" @focus="getBlur" type="password" v-model="loginForm.password" prefix-icon="iconfont icon-3702mima" ></el-input>
           </el-form-item>
           <!-- 按钮 -->
           <el-form-item class="btns">
@@ -40,6 +41,9 @@ import { log } from 'util';
 export default {
   data () {
     return {
+      images:require('../assets/bg.jpeg'),
+      
+
       loginForm:{
         username:'',
         password:''
@@ -71,22 +75,25 @@ export default {
     },
     loseBlur(){
         console.log('失去了焦点');
-        
+        this.images = require("../assets/bg.jpeg")
         
         
     },
     getBlur(){
         console.log('获得了焦点');
-        
+        this.images = require("../assets/bg1.jpg")
     }
   }
 }
 </script>
 <style lang='less' scoped>
   .login_container{
-    background:url('../assets/bg.jpeg');
-    background-size:contain;
+
     height: 82%;
+  }
+  .login_container img{
+    height: 100%;
+
   }
   .newbg{
     position: absolute;
@@ -138,4 +145,5 @@ export default {
     display: flex;
     justify-content: flex-end;
   }
+  
 </style>
