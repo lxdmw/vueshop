@@ -1,35 +1,40 @@
 <template>
- 
-    
-    <!-- 整个页面区域 -->
+  <!-- 整个页面区域 -->
   <div class="newbg">
-    
     <div class="login_container">
-      <img :src="images" >
+
+      <!-- 添加背景图为2233 -->
+      <img :src="images" class="bgcimges">
+
       <!-- 中间白色的盒子区域 -->
       <div class="login_box">
+
         <!-- 头像区域 -->
         <div class="avatar_box">
           <img src="../assets/logo.png" alt="">
         </div>
+
         <!-- 表单区域 -->
         <el-form ref="loginFormRef" :model="loginForm" class="login_form" :rules="loginFormRules">
-          
+
           <!-- 用户名 -->
           <el-form-item prop="username">
             <el-input  v-model="loginForm.username" prefix-icon="iconfont icon-user"></el-input>
           </el-form-item>
+
           <!-- 密码 -->
           <el-form-item prop="password">
             <el-input @blur="loseBlur" @focus="getBlur" type="password" v-model="loginForm.password" prefix-icon="iconfont icon-3702mima" ></el-input>
           </el-form-item>
+
           <!-- 按钮 -->
           <el-form-item class="btns">
             <el-button type="primary" round @click="login">登录</el-button>
             <el-button type="info" round @click="resetLoginForm">重置</el-button>
-
           </el-form-item>
+          
         </el-form>
+        <!-- 表单区域结束 -->
       </div>
     </div>
   </div>
@@ -38,12 +43,11 @@
 <script>
 import { async } from 'q';
 import { log } from 'util';
+import { type } from 'os';
 export default {
   data () {
     return {
       images:require('../assets/bg.jpeg'),
-      
-
       loginForm:{
         username:'',
         password:''
@@ -68,19 +72,29 @@ export default {
       this.$refs.loginFormRef.validate(async valid =>{
         if(!valid) return;
         const { data: res } = await this.$http.post("login", this.loginForm);
-        if(res.meta.status !== 200) return console.log("登录失败");
-        console.log("登录成功");
+        if(res.meta.status !== 200) return this.$message({
+            message: '啊哦 (′д｀ )…彡…彡账号或者密码错误 重新登录试试',
+            type:'error',
+            center:true,
+            duration:3000
+          });
+          this.$message({
+            message: '恭喜你登录成功(๑•̀ㅂ•́)و✧',
+            type:'success',
+            center:true,
+            duration:3000
+          });
+          window.sessionStorage.setItem('token', res.data.token);
+          this.$router.push("/home");
       });
-      
+     
     },
     loseBlur(){
-        console.log('失去了焦点');
+        // 当密码框失去焦点时背景图切换为默认的2233娘
         this.images = require("../assets/bg.jpeg")
-        
-        
     },
     getBlur(){
-        console.log('获得了焦点');
+        // 当密码框获得焦点时背景图切换为简约版2233娘
         this.images = require("../assets/bg1.jpg")
     }
   }
@@ -88,12 +102,10 @@ export default {
 </script>
 <style lang='less' scoped>
   .login_container{
-
     height: 82%;
   }
-  .login_container img{
+  .bgcimges{
     height: 100%;
-
   }
   .newbg{
     position: absolute;
