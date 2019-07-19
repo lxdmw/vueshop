@@ -22,7 +22,7 @@
           </el-form-item>
           <!-- 按钮 -->
           <el-form-item class="btns">
-            <el-button type="primary" round>登录</el-button>
+            <el-button type="primary" round @click="login">登录</el-button>
             <el-button type="info" round @click="resetLoginForm">重置</el-button>
 
           </el-form-item>
@@ -33,12 +33,14 @@
   
 </template>
 <script>
+import { async } from 'q';
+import { log } from 'util';
 export default {
   data () {
     return {
       loginForm:{
-        username:'',
-        password:''
+        username:'admin',
+        password:'123456'
       },
       loginFormRules:{
         username: [
@@ -55,7 +57,21 @@ export default {
   methods:{
     resetLoginForm(){
       this.$refs.loginFormRef.resetFields()
-    }
+    },
+    login(){
+      this.$refs.loginFormRef.validate(async valid => {
+        if(!valid) return
+        
+        
+        var {data:res} = await this.$http.post('login', this.loginForm)
+        
+        if(res.meta.status != 200) return this.$message.error('error')
+        this.$message.success('success')
+        
+        
+        
+      })
+    },
   }
 }
 </script>
