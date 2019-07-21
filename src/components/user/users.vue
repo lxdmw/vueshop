@@ -6,6 +6,7 @@
     <el-breadcrumb-item>用户管理</el-breadcrumb-item>
     <el-breadcrumb-item>用户列表</el-breadcrumb-item>
     </el-breadcrumb>
+    <!-- 卡片视图 -->
     <el-card>
       <el-row :gutter="20">
         <el-col :span="8">
@@ -110,10 +111,10 @@
         <el-form-item label="用户名" >
             <el-input v-model="editForm.username" disabled></el-input>
         </el-form-item>
-        <el-form-item label="邮箱" >
+        <el-form-item prop="email" label="邮箱" >
             <el-input v-model="editForm.email"></el-input>
         </el-form-item>
-        <el-form-item label="手机" >
+        <el-form-item prop="mobile" label="手机" >
             <el-input v-model="editForm.mobile"></el-input>
         </el-form-item>
 
@@ -129,8 +130,8 @@
   </div>
 </template>
 <script>
-import { log } from 'util';
 import { async } from 'q';
+
 export default {
  
   created(){
@@ -267,14 +268,24 @@ export default {
       
     },
     // 修改表单的提交事件
-    async editFormInfo() {
-      const {data:res} = await this.$http.put('users/' + id)
-      if(res.meta.status != 200) return this.$message.error('更新失败..QAQ')
-      editDialogVisible = false
+    editFormInfo() {
+      this.$refs.editFormRef.validate(async valid=>{
+        if(!valid) return 
+        // 发起修改用户信息的数据请求
+        const {data:res} = await this.$http.put('users/' + this.editForm.id,
+        {email:this.editForm.email,mobile:this.editForm.mobile})
+        if(res.meta.status != 200) return this.$message.error('更新失败..QAQ')
+
+      })
+      // 关闭对话框
+      this.editDialogVisible = false
+      // 刷新数据列表
       this.getUserList()
+      // 提示修改成功
       this.$message.success('更新成功啦(*^__^*) 嘻嘻……')
     },
-    //询问是否确认删除
+    // 删除用户功能
+    // 询问是否确认删除
     async removeUserById(id){
       const confirmResult = await this.$confirm('此操作将永久删除该用户,是否继续','提示',{
         confirmButtonText:'sure',
@@ -285,7 +296,7 @@ export default {
         return this.$message.info('已取消了删除');
         
       }
-      console.log('确定删除');
+      // 确认删除后调用api接口
       const {data:res} = await this.$http.delete('users/' + id)
       if(res.meta.status != 200) return this.$message.error('删除失败.....QAQ')
       return this.$message.success('删除成功了哦(*^__^*)')
