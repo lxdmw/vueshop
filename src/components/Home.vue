@@ -14,20 +14,24 @@
       <!-- 侧边栏 开始 -->
       <el-aside width="isCollapse ? '64px' : '200px'">
         <div class="collapseBtn" @click="isCollapse = !isCollapse">|||</div>
+        <!-- 侧边栏菜单区域 -->
         <el-menu
           background-color="rgb(170, 147, 129)"
           text-color="#000"
-          active-text-color="black"
-
+          active-text-color="orange"
           :unique-opened="true"
           :collapse="isCollapse"
           :collapse-transition="false"
           router
           :default-active="activePath"
         >
+          <!-- 一级菜单 -->
           <el-submenu :index="item.id + ''" v-for="item in menulist" :key="item.id">
+            <!-- 一级菜单的模版区域 -->
             <template slot="title">
+              <!-- 图标 -->
               <i :class="iconsObj[item.id]"></i>
+              <!-- 文本 -->
               <span>{{item.authName}}</span>
             </template>
             <el-menu-item
@@ -61,13 +65,14 @@ export default {
     return {
       menulist: [],
       iconsObj: {
-        "125": "iconfont icon-user logoColor",
-        "103": "iconfont icon-tijikongjian logoColor",
-        "101": "iconfont icon-shangpin logoColor",
-        "102": "iconfont icon-danju logoColor",
-        "145": "iconfont icon-baobiao logoColor"
+        "125": "iconfont icon-user ",
+        "103": "iconfont icon-tijikongjian ",
+        "101": "iconfont icon-shangpin ",
+        "102": "iconfont icon-danju ",
+        "145": "iconfont icon-baobiao "
       },
       isCollapse: false,
+      // 被选中的当前项目的路径
       activePath:"",
     };
   },
@@ -82,10 +87,11 @@ export default {
       if (res.meta.status != 200)
         return this.$message.error("没找到数据。。。。");
       this.menulist = res.data;
-      console.log(this.menulist);
+      // console.log(this.menulist);
     },
+    // 保存链接的激活状态
     saveNavItem(index) {
-      console.log(index);
+      // console.log(index);
       sessionStorage.setItem("path", "/" + index)
     },
   }
@@ -100,7 +106,7 @@ export default {
   display: flex;
   justify-content: space-between;
   font-size: 20px;
-  color: #ccc;
+  // color: #ccc;
   font-weight: 800;
   align-items: center;
   padding-left: 0;
@@ -112,35 +118,31 @@ export default {
     }
   }
 }
-
+// 侧边栏颜色
 .el-aside {
   background-color: rgb(170, 147, 129);
 }
+// 主题区域背景色
 .el-main {
   background: linear-gradient(bottom, rgb(240, 228, 202), rgb(229, 213, 180));
-  // background-color: rgb(240, 228, 202);
 }
+//消除侧边栏选中白色条
 .el-menu {
   border-right: none;
 }
+// 给字体图标添加外右边距
 .iconfont {
   margin-right: 15px;
 }
-.logoColor {
-  color: rgb(146, 126, 117);
-}
+// 展开按钮设置颜色
 .collapseBtn {
   text-align: center;
   color: rgb(146, 126, 117);
   cursor: pointer;
 }
+// logo大小
 .slogo {
   height: 60px;
 }
-.el-submenu span {
-  color: #ccc;
-}
-.el-menu-item span {
-  color: #ccc;
-}
+
 </style>
