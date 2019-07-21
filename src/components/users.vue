@@ -14,7 +14,7 @@
           </el-input>
         </el-col>
         <el-col :span="16">
-          <el-button type="primary">添加用户</el-button>
+          <el-button type="primary" @click="addDialogVisible = true">添加用户</el-button>
         </el-col>
       </el-row >
 
@@ -62,9 +62,25 @@
         :total="total">
       </el-pagination>
     </el-card>
+    <!-- 渲染添加用户对话框 -->
+    <el-dialog
+      title="提示"
+      :visible.sync="addDialogVisible"
+      width="30%"
+      >
+      <!-- 内容主体区域 -->
+      <span>这是一段信息</span>
+      <!-- 底部信息 -->
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="addDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="addDialogVisible = false">确 定</el-button>
+      </span>
+    </el-dialog>
+
   </div>
 </template>
 <script>
+import { log } from 'util';
 export default {
   created(){
     this.getUserList()
@@ -73,12 +89,13 @@ export default {
     return {
       //获取用户列表
       queryInfo:{
-        query:'adm',// 查询关键字
+        query:'',// 查询关键字
         pagenum:1,// 当前页码
         pagesize:2 // 每页数据条数
       },
       userlist:[],// 用户数据
       total:0,// 用户数据总条数
+      addDialogVisible:false
     };
   },
   
@@ -109,6 +126,7 @@ export default {
       if(res.meta.status != 200) return this.$message.error('修改用户状态失败QAQ')
       this.$message.success('修改用户状态成功了哦')
     },
+    
   
 
   }
