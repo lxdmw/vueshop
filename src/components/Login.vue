@@ -82,7 +82,7 @@ export default {
             message: '恭喜你登录成功(๑•̀ㅂ•́)و✧',
             type:'success',
             center:true,
-            duration:3000
+            duration:3000,
           });
           window.sessionStorage.setItem('token', res.data.token);
           this.$router.push("/home");
