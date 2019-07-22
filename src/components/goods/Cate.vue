@@ -16,21 +16,52 @@
       </el-row>
 
       <!-- 分类列表区域 -->
-      <tree-table :data="goodList"></tree-table>
+      <tree-table 
+      :data="goodList" 
+      :columns="columns"
+      :expand-type='false'
+      :selection-type='false'
+      show-index
+      index-text="#"
+      border
+      :show-row-hover="false">
+        <!-- 是否有效 -->
+        <template slot="isOk" slot-scope="scope">
+          <i 
+          class="el-icon-success" 
+          v-if="scope.row.cat_deleted==false"
+          style="color:lightgreen;"></i>
+          <i class="el-icon-error" v-else style="color:red;"></i>
+
+        </template>
+        <!-- 排序 -->
+        <template slot="order" slot-scope="scope">
+          <el-tag type="danger" v-if="scope.row.cat_level==0">一级</el-tag>
+          <el-tag type="succcess" v-else-if="scope.row.cat_level==1">二级</el-tag>
+          <el-tag type="warning" v-else>三级</el-tag>
+
+        </template>
+        <!-- 操作 -->
+        <template slot="opt" slot-scope="scope">
+          <el-button type="primary" size="mini" icon="el-icon-edit" >编辑</el-button>
+          <el-button type="danger" size="mini" icon="el-icon-delete" >删除</el-button>
+        </template>
+      </tree-table>
         
 
       
       
       <!-- 分页区域 -->
-      <!-- <el-pagination 
+      <el-pagination 
+        
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :current-page="queryInfo.pagenum"
-        :page-sizes="[1, 2, 3, 5]"
+        :page-sizes="[3, 5, 10, 15]"
         :page-size="queryInfo.pagesize"
         layout="total, sizes, prev, pager, next, jumper"
         :total="total">
-      </el-pagination> -->
+      </el-pagination>
 
 
     </el-card>
@@ -52,7 +83,30 @@ export default {
       },
 
       // 商品分类的数据列表,默认为空
-      goodList:[]
+      goodList:[],
+      // 表的分列数据
+      total: 0,
+      columns:[
+        {
+          label:'分类名称',
+          prop:'cat_name',
+        },{
+          label:'是否有效',
+          // 表示将当前列定义为模板列
+          type:'template',
+          // 表示当前这一列使用模板的名称
+          template:'isOk'
+        },{
+          label:'排序',
+          // 表示将当前列定义为模板列
+          type:'template',
+          // 表示当前这一列使用模板的名称
+          template:'order'
+        },{
+          label:'操作',
+          type:'template',
+          template:'opt'
+        }]
     };
   },
   methods:{
@@ -69,7 +123,17 @@ export default {
 
       //为总条数赋值
       this.total = res.data.total
-    }
+    },
+    // 监听pagesize改变
+    handleSizeChange(newSize) {
+      this.queryInfo.pagesize = newSize
+      this.getGoodsList()
+    },
+    // 监听pagenum改变
+    handleCurrentChange(newPage){
+      this.queryInfo.pagenum = newPage
+      this.getGoodsList()
+    },
   }
 }
 </script>
@@ -77,4 +141,5 @@ export default {
   .el-button {
     margin-bottom: 15px;
   }
+  
 </style>
