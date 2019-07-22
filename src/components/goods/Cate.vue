@@ -10,21 +10,21 @@
       <!-- 分类添加区域 -->
       <el-row>
         <el-col>
-          <el-button type="primary">添加分类</el-button>
+          <el-button type="primary" @click="showAddCateDialog">添加分类</el-button>
           
         </el-col>
       </el-row>
 
       <!-- 分类列表区域 -->
       <tree-table 
-      :data="goodList" 
-      :columns="columns"
-      :expand-type='false'
-      :selection-type='false'
-      show-index
-      index-text="#"
-      border
-      :show-row-hover="false">
+        :data="goodList" 
+        :columns="columns"
+        :expand-type='false'
+        :selection-type='false'
+        show-index
+        index-text="#"
+        border
+        :show-row-hover="false">
         <!-- 是否有效 -->
         <template slot="isOk" slot-scope="scope">
           <i 
@@ -47,9 +47,43 @@
           <el-button type="danger" size="mini" icon="el-icon-delete" >删除</el-button>
         </template>
       </tree-table>
-        
-
       
+      <!-- 添加分类对话框 -->
+      <el-dialog
+        title="添加分类"
+        :visible.sync="addCateDialogVisible"
+        width="30%"
+        >
+        <!-- 添加分类的表单 -->
+        <el-form :model="addCateForm"
+        :rules="addCateFormRules"
+        ref="addCateFormRef"
+        label-width="100px">
+          <el-form-item label="分类名称" prop="cat_name">
+            <el-input v-model="addCateForm.cat_name"></el-input>
+          </el-form-item>
+          <el-form-item label="父级分类:" style="position:relative;">
+
+            <el-cascader 
+              props.expand-trigger="hover"
+              :options="parentCateList"
+              v-model="selectedKeys"
+              @change="parentCateChanged"
+              :props="cascaderProps"
+              clearable
+              style="height:30px">
+
+            </el-cascader>
+          </el-form-item>
+
+        </el-form>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="addCateDialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="addCateDialogVisible = false">确 定</el-button>
+        </span>
+      </el-dialog>
+
+            
       
       <!-- 分页区域 -->
       <el-pagination 
@@ -75,6 +109,8 @@ export default {
   },
   data () {
     return {
+      // 显示隐藏添加分类对话框
+      addCateDialogVisible:false,
       // 查询条件
       queryInfo:{
         type:3,
@@ -106,7 +142,30 @@ export default {
           label:'操作',
           type:'template',
           template:'opt'
-        }]
+        }],
+        addCateForm:{
+          // 将要添加的分类的名称
+          cat_name:'',
+          cat_pid: 0,
+          cat_level: 0,
+        },
+        addCateFormRules:{
+          cat_name:[
+            {required:true,message:'请输入分类名称', trigger:'blur'}
+          ]
+        },
+        parentCateList:[],
+        // 指定级联选择器的配置对象
+        cascaderProps:{
+          value:'cat_id',
+          label:'cat_name',
+          children:'children',
+        },
+        // 选中的父级分类的id数组
+        selectedKeys:[],
+
+
+
     };
   },
   methods:{
@@ -134,6 +193,25 @@ export default {
       this.queryInfo.pagenum = newPage
       this.getGoodsList()
     },
+    // 点击添加分类按钮展示对话框
+    showAddCateDialog(){
+      this.getParentCateList()
+      this.addCateDialogVisible=true
+    },
+    // 获取父类的数据列表
+    async getParentCateList(){
+      const {data:res} = await this.$http.get('categories',{params:{type:2}})
+      if(res.meta.status != 200) return this.$message.error('获取父级分类数据失败')
+
+      this.parentCateList = res.data
+      console.log(res.data);
+      
+    },
+    parentCateChanged(){
+      console.log(this.selectedKeys);
+      
+    },
+    
   }
 }
 </script>
@@ -141,5 +219,9 @@ export default {
   .el-button {
     margin-bottom: 15px;
   }
+  .el-cascader {
+    width: 100%;
+  }
+
   
 </style>
