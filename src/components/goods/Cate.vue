@@ -1,6 +1,6 @@
 <template>
   <div>
-     <!-- 面包屑导航 -->
+    <!-- 面包屑导航 -->
     <el-breadcrumb separator-class="el-icon-arrow-right">
     <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
     <el-breadcrumb-item>商品管理</el-breadcrumb-item>
@@ -30,9 +30,10 @@
           <i 
           class="el-icon-success" 
           v-if="scope.row.cat_deleted==false"
-          style="color:lightgreen;"></i>
-          <i class="el-icon-error" v-else style="color:red;"></i>
-
+          style="color:lightgreen;">
+          </i>
+          <i class="el-icon-error" v-else style="color:red;">
+          </i>
         </template>
         <!-- 排序 -->
         <template slot="order" slot-scope="scope">
@@ -42,7 +43,7 @@
 
         </template>
         <!-- 操作 -->
-        <template slot="opt" slot-scope="scope">
+        <template slot="opt" >
           <el-button type="primary" size="mini" icon="el-icon-edit" >编辑</el-button>
           <el-button type="danger" size="mini" icon="el-icon-delete" >删除</el-button>
         </template>
@@ -53,6 +54,8 @@
         title="添加分类"
         :visible.sync="addCateDialogVisible"
         width="30%"
+        @close="addCateDialogClosed"
+
         >
         <!-- 添加分类的表单 -->
         <el-form :model="addCateForm"
@@ -62,10 +65,10 @@
           <el-form-item label="分类名称" prop="cat_name">
             <el-input v-model="addCateForm.cat_name"></el-input>
           </el-form-item>
-          <el-form-item label="父级分类:" style="position:relative;">
+          <el-form-item label="父级分类:" >
 
             <el-cascader 
-              props.expand-trigger="hover"
+              
               :options="parentCateList"
               v-model="selectedKeys"
               @change="parentCateChanged"
@@ -79,7 +82,7 @@
         </el-form>
         <span slot="footer" class="dialog-footer">
           <el-button @click="addCateDialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="addCateDialogVisible = false">确 定</el-button>
+          <el-button type="primary" @click="addCate">确 定</el-button>
         </span>
       </el-dialog>
 
@@ -160,6 +163,8 @@ export default {
           value:'cat_id',
           label:'cat_name',
           children:'children',
+          checkStrictly: true,
+          expandTrigger:"hover"
         },
         // 选中的父级分类的id数组
         selectedKeys:[],
@@ -204,13 +209,47 @@ export default {
       if(res.meta.status != 200) return this.$message.error('获取父级分类数据失败')
 
       this.parentCateList = res.data
-      console.log(res.data);
+      
       
     },
+    // 监听选择父级的变换
     parentCateChanged(){
-      console.log(this.selectedKeys);
-      
+      // 如果selectedKeys>0说明点选了父级
+      if(this.selectedKeys.length > 0) {
+        // 取最后一个id值作为父级的id
+        this.addCateForm.cat_pid = this.selectedKeys[this.selectedKeys.length - 1]
+        // 数组长度正好等于父级的层级
+        this.selectedKeys.cat_level = this.selectedKeys.length
+        return
+      }else{
+        // 否则清零id和层级
+        this.addCateForm.cat_pid = 0
+        this.selectedKeys.cat_level = 0
+      }
     },
+    //点击确定提交添加分类表单
+    addCate(){
+      this.$refs.addCateFormRef.validate(async valid=>{
+        if (!valid) return 
+        const {data:res} = await this.$http.post('categories',this.addCateForm)
+        if(res.meta.status != 201) {
+          return this.$message.error('添加分类失败')
+        }
+        this.$message.success('添加分类成功')
+        this.getGoodsList()
+        this.addCateDialogVisible  = false
+
+
+      })
+    },
+    // 监听添加分类对话框的关闭事件
+    addCateDialogClosed(){
+      this.$refs.addCateFormRef.resetFields()
+      this.selectedKeys =[]
+      this.addCateForm.cat_level = 0
+      this.addCateForm.cat_pid = 0
+    },
+    
     
   }
 }
@@ -219,9 +258,7 @@ export default {
   .el-button {
     margin-bottom: 15px;
   }
-  .el-cascader {
-    width: 100%;
-  }
+
 
   
 </style>
