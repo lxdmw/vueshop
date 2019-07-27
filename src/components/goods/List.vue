@@ -12,7 +12,12 @@
       <el-row :gutter="20">
         <!-- 搜索框 -->
         <el-col :span="8">
-          <el-input placeholder="请输入内容" v-model="queryInfo.query" clearable @clear="getGoodsList">
+          <el-input placeholder="请输入内容" 
+            v-model="queryInfo.query" 
+            clearable 
+            @clear="getGoodsList"
+            @keyup.enter.native="getGoodsList()"
+            >
     
             <el-button slot="append" icon="el-icon-search" @click="getGoodsList"></el-button>
           </el-input>

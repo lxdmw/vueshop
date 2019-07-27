@@ -3,6 +3,8 @@ import { Button, Form, FormItem, Input, Message, Container, Header, Aside, Main,
 Table,TableColumn,Switch,Tooltip,Pagination, Dialog,MessageBox,Tag,Tree,Select,Option,Cascader,Alert,
 Tabs,TabPane,Steps,Step,Checkbox,CheckboxGroup,Upload } from 'element-ui'
 
+import Timeline from './timeline/index'
+import TimelineItem from './timeline-item/index'
 
 Vue.use(Button)
 Vue.use(Form)
@@ -39,6 +41,9 @@ Vue.use(Step)
 Vue.use(Checkbox)
 Vue.use(CheckboxGroup)
 Vue.use(Upload)
+Vue.use(Timeline)
+Vue.use(TimelineItem)
+
 
 
 
