@@ -19,7 +19,7 @@
         </el-col>
         <!-- 添加商品按钮 -->
         <el-col :span="4">
-          <el-button type="primary">添加商品</el-button>
+          <el-button type="primary" @click="goAddPage">添加商品</el-button>
         </el-col>
       </el-row>
 
@@ -161,6 +161,10 @@ export default {
       this.getGoodsList()
     
 
+    },
+    // 跳转到添加商品页面
+    goAddPage(){
+      this.$router.push('/goods/add')
     }
   }
 
