@@ -102,7 +102,7 @@ export default {
   height: 100%;
 }
 .el-header {
-  background: linear-gradient(right, rgb(146, 126, 117), rgb(170, 147, 129));
+  background: linear-gradient(to left, rgb(146, 126, 117), rgb(170, 147, 129));
   display: flex;
   justify-content: space-between;
   font-size: 20px;
@@ -124,7 +124,7 @@ export default {
 }
 // 主题区域背景色
 .el-main {
-  background: linear-gradient(bottom, rgb(240, 228, 202), rgb(229, 213, 180));
+  background: linear-gradient(to left, rgb(240, 228, 202), rgb(229, 213, 180));
 }
 //消除侧边栏选中白色条
 .el-menu {
